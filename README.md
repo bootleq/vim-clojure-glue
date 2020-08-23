@@ -33,5 +33,20 @@ Currently only works with [vim-iced][] installed.
   - `repl-connected`: during setup, found repl connected
 
 
+- `gf` helper function: `clojure#glue#gf#includeexpr()`
+
+  Currently only support static (no server involved) file finding in project `src` directory.
+
+  Example config:
+
+    function! s:glue_bare_setup()
+      execute 'setlocal path+=' . b:clojure_project_dir . '/src'
+      setlocal suffixesadd=.clj,.cljs
+      setlocal includeexpr=clojure#glue#gf#includeexpr()
+    endfunction
+
+    call clojure#glue#register('bare-setup', function('s:glue_bare_setup'))
+
+
 
 [vim-iced]: https://github.com/liquidz/vim-iced
