@@ -49,7 +49,7 @@ Currently mainly tested with [vim-iced][] installed.
 
 - `gf` helper function: `clojure#glue#gf#includeexpr()`
 
-  Currently only support static (no server involved) file finding in project `src` directory.
+  Basic usage, only support static (no server involved) file finding in project `src` directory.
 
   Example config:
 
@@ -61,6 +61,11 @@ Currently mainly tested with [vim-iced][] installed.
 
     call clojure#glue#register('bare-setup', function('s:glue_bare_setup'))
 
+  There is a helper function `clojure#glue#iced#gf()` to rebind `gf` for
+  vim-iced's `IcedDefJump`, and fallback to normal `gf` if no tag to jump, example:
+
+    " add below to 'bare-setup' event
+    nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
 
 
 [vim-iced]: https://github.com/liquidz/vim-iced
