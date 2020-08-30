@@ -3,8 +3,7 @@ Vim Clojure Glue (unstable)
 
 I am new to clojure, make glue to help myself.
 
-
-Currently only works with [vim-iced][] installed.
+Currently mainly tested with [vim-iced][] installed.
 
 
 
@@ -18,6 +17,21 @@ Currently only works with [vim-iced][] installed.
   Currently support:
 
   - shadow-cljs, by finding `shadow-cljs.edn` file
+
+
+- Wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
+
+  For example `clojure#glue#def('connected?')` can define an `connected?` function, delegate to vim-iced's `iced#nrepl#is_connected()`,  
+  then our script will call it with `clojure#glue#call('connected?')`,  
+  or call it only when defined with `clojure#glue#try('connected?')`.
+
+  Functions:
+
+  - `connected?`: tell if repl has been connected.
+
+    vim-iced example:
+
+        call clojure#glue#def('connected?', 'iced#repl#is_connected')
 
 
 - Some event dispatching, can do register by `call clojure#glue#register()`
@@ -50,3 +64,4 @@ Currently only works with [vim-iced][] installed.
 
 
 [vim-iced]: https://github.com/liquidz/vim-iced
+[conjure]: https://github.com/Olical/conjure
