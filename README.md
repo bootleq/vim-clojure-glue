@@ -11,6 +11,8 @@ Currently mainly tested with [vim-iced][] installed.
 
 - iskeyword: remove `.` and `-`
 
+  Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
+
 
 - `ClojureDetect()`, detect project root and set as variable `b:clojure_project_dir`
 
@@ -19,10 +21,10 @@ Currently mainly tested with [vim-iced][] installed.
   - shadow-cljs, by finding `shadow-cljs.edn` file
 
 
-- Wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
+- Some wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
 
   For example `clojure#glue#def('connected?')` can define an `connected?` function, delegate to vim-iced's `iced#nrepl#is_connected()`,  
-  then our script will call it with `clojure#glue#call('connected?')`,  
+  then our script can call it with `clojure#glue#call('connected?')`,  
   or call it only when defined with `clojure#glue#try('connected?')`.
 
   Functions:
@@ -44,7 +46,7 @@ Currently mainly tested with [vim-iced][] installed.
 
         call clojure#glue#register('bare-setup', function('s:my_bare_setup'))
 
-  - `repl-connected`: during setup, found repl connected
+  - `repl-connected`: during setup, found repl connected (this requires `connected?` function defined).
 
 
 - `gf` helper function: `clojure#glue#gf#includeexpr()`
@@ -55,13 +57,13 @@ Currently mainly tested with [vim-iced][] installed.
 
     function! s:glue_bare_setup()
       execute 'setlocal path+=' . b:clojure_project_dir . '/src'
-      setlocal suffixesadd=.clj,.cljs
+      setlocal suffixesadd+=.clj,.cljs
       setlocal includeexpr=clojure#glue#gf#includeexpr()
     endfunction
 
     call clojure#glue#register('bare-setup', function('s:glue_bare_setup'))
 
-  There is a helper function `clojure#glue#iced#gf()` to rebind `gf` for
+  There is a helper function `clojure#glue#iced#gf()` to rebind `gf` to
   vim-iced's `IcedDefJump`, and fallback to normal `gf` if no tag to jump, example:
 
     " add below to 'bare-setup' event
