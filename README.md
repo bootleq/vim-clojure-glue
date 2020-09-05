@@ -7,18 +7,30 @@ Currently mainly tested with [vim-iced][] installed.
 
 
 
+## Recipes
+
+- Change `'iskeyword'` for clojure files.
+
+  Do setup in `filetype` event:
+
+    function! s:glue_filetype()
+      for kw in ['.', '/', ':']
+        execute printf('setlocal iskeyword-=%s', kw)
+      endfor
+    endfunction
+
+    call clojure#glue#register('filetype', function('s:glue_filetype'))
+
+
 ## Features
-
-- iskeyword: remove `.` and `-`
-
-  Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
-
 
 - `ClojureDetect()`, detect project root and set as variable `b:clojure_project_dir`
 
   Currently support:
 
   - shadow-cljs, by finding `shadow-cljs.edn` file
+
+  Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
 
 
 - Some wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
@@ -40,11 +52,15 @@ Currently mainly tested with [vim-iced][] installed.
 
   Events:
 
+  - `filetype`: after filetype "clojure" applied (this use Vim's `*after-directory*` so can overwrite built-in filetype setting).
+
+
   - `bare-setup`: after project dir detected, but without repl connected
 
     useful to setup stuff don't need repl server.
 
         call clojure#glue#register('bare-setup', function('s:my_bare_setup'))
+
 
   - `repl-connected`: during setup, found repl connected (this requires `connected?` function defined).
 
