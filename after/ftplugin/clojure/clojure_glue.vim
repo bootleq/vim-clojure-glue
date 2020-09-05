@@ -1,5 +1,5 @@
 call clojure#glue#dispatch('filetype')
 
 if ClojureDetect()
-  call clojure#glue#setup()
+  call clojure#glue#dispatch('project')
 endif

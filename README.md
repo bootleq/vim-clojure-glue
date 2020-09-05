@@ -55,14 +55,7 @@ Currently mainly tested with [vim-iced][] installed.
   - `filetype`: after filetype "clojure" applied (this use Vim's `*after-directory*` so can overwrite built-in filetype setting).
 
 
-  - `bare-setup`: after project dir detected, but without repl connected
-
-    useful to setup stuff don't need repl server.
-
-        call clojure#glue#register('bare-setup', function('s:my_bare_setup'))
-
-
-  - `repl-connected`: during setup, found repl connected (this requires `connected?` function defined).
+  - `project`: after project dir detected.
 
 
 - `gf` helper function: `clojure#glue#gf#includeexpr()`
@@ -71,18 +64,22 @@ Currently mainly tested with [vim-iced][] installed.
 
   Example config:
 
-    function! s:glue_bare_setup()
-      execute 'setlocal path+=' . b:clojure_project_dir . '/src'
-      setlocal suffixesadd+=.clj,.cljs
-      setlocal includeexpr=clojure#glue#gf#includeexpr()
+    function! s:glue_project_detected()
+      if clojure#glue#try('connected?')
+        execute 'setlocal path+=' . b:clojure_project_dir . '/src'
+        setlocal suffixesadd+=.clj,.cljs
+        setlocal includeexpr=clojure#glue#gf#includeexpr()
+      else
+        " do something requires repl connected
+      endif
     endfunction
 
-    call clojure#glue#register('bare-setup', function('s:glue_bare_setup'))
+    call clojure#glue#register('project', function('s:glue_project_detected'))
 
   There is a helper function `clojure#glue#iced#gf()` to rebind `gf` to
   vim-iced's `IcedDefJump`, and fallback to normal `gf` if no tag to jump, example:
 
-    " add below to 'bare-setup' event
+    " add below to 'project' event
     nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
 
 

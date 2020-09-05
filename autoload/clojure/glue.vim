@@ -2,15 +2,6 @@ let s:implements = {}
 let s:events = {}
 
 
-function! clojure#glue#setup()
-  if clojure#glue#try('connected?')
-    call clojure#glue#dispatch('repl-connected')
-  else
-    call clojure#glue#dispatch('bare-setup')
-  end
-endfunction
-
-
 " #def(func)              => test if implements[func] exist
 " #def(func, implement)   => set implements[func] to arg 2
 function! clojure#glue#def(...)
