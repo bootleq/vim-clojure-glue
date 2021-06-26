@@ -41,6 +41,7 @@ function! ClojureDetect() abort "{{{
   endfor
 
   if empty(path)
+    let b:clojure_project_type = '' " EFFECT: set project type
     return v:false
   endif
 
