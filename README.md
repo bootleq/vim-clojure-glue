@@ -7,6 +7,11 @@ Currently mainly tested with [vim-iced][] installed.
 
 
 
+## Status
+
+Unstable.
+
+
 ## Recipes
 
 - Change `'iskeyword'` for clojure files.
