@@ -69,7 +69,7 @@ Unstable.
   - `no_project`: after above detection, but no project found. For example when read source code in .m2/repository zipfile.
 
 
-  - `first_connected`: after first time repl connected.
+  - `first_connected`: after first time repl connected. (have to implement "connected" on your own currently)
 
     vim-iced example:
 
@@ -89,7 +89,7 @@ Unstable.
   Example config:
 
       function! s:glue_project_detected()
-        if clojure#glue#try('connected?')
+        if !clojure#glue#try('connected?')
           execute 'setlocal path+=' . b:clojure_project_dir . '/src'
           setlocal suffixesadd+=.clj,.cljs
           setlocal includeexpr=clojure#glue#gf#includeexpr()
