@@ -18,13 +18,13 @@ Unstable.
 
   Do setup in `filetype` event:
 
-    function! s:glue_filetype()
-      for kw in ['.', '/', ':']
-        execute printf('setlocal iskeyword-=%s', kw)
-      endfor
-    endfunction
+      function! s:glue_filetype()
+        for kw in ['.', '/', ':']
+          execute printf('setlocal iskeyword-=%s', kw)
+        endfor
+      endfunction
 
-    call clojure#glue#register('filetype', function('s:glue_filetype'))
+      call clojure#glue#register('filetype', function('s:glue_filetype'))
 
 
 ## Features
@@ -73,13 +73,13 @@ Unstable.
 
     vim-iced example:
 
-      function! s:glue_project()
-        " set some key mappings
-      endfunction
-      call iced#hook#add('connected', {
-            \   'type': 'command',
-            \   'exec': 'call clojure#glue#dispatch("first_connected")'})
-      call clojure#glue#register('first_connected', function('s:glue_project'))
+        function! s:glue_project()
+          " set some key mappings
+        endfunction
+        call iced#hook#add('connected', {
+              \   'type': 'command',
+              \   'exec': 'call clojure#glue#dispatch("first_connected")'})
+        call clojure#glue#register('first_connected', function('s:glue_project'))
 
 
 - `gf` helper function: `clojure#glue#gf#includeexpr()`
@@ -88,23 +88,23 @@ Unstable.
 
   Example config:
 
-    function! s:glue_project_detected()
-      if clojure#glue#try('connected?')
-        execute 'setlocal path+=' . b:clojure_project_dir . '/src'
-        setlocal suffixesadd+=.clj,.cljs
-        setlocal includeexpr=clojure#glue#gf#includeexpr()
-      else
-        " do something requires repl connected
-      endif
-    endfunction
+      function! s:glue_project_detected()
+        if clojure#glue#try('connected?')
+          execute 'setlocal path+=' . b:clojure_project_dir . '/src'
+          setlocal suffixesadd+=.clj,.cljs
+          setlocal includeexpr=clojure#glue#gf#includeexpr()
+        else
+          " do something requires repl connected
+        endif
+      endfunction
 
-    call clojure#glue#register('project', function('s:glue_project_detected'))
+      call clojure#glue#register('project', function('s:glue_project_detected'))
 
   There is a helper function `clojure#glue#iced#gf()` to rebind `gf` to
   vim-iced's `IcedDefJump`, and fallback to normal `gf` if no tag to jump, example:
 
-    " add below to 'project' event
-    nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
+      " add below to 'project' event
+      nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
 
 
 [vim-iced]: https://github.com/liquidz/vim-iced
