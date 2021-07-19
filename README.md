@@ -28,7 +28,10 @@ Currently mainly tested with [vim-iced][] installed.
 
   Currently support:
 
+  - clojure cli project, by finding `deps.edn` file
   - shadow-cljs, by finding `shadow-cljs.edn` file
+
+  This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project.
 
   Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
 
@@ -56,6 +59,22 @@ Currently mainly tested with [vim-iced][] installed.
 
 
   - `project`: after project dir detected.
+
+
+  - `no_project`: after above detection, but no project found. For example when read source code in .m2/repository zipfile.
+
+
+  - `first_connected`: after first time repl connected.
+
+    vim-iced example:
+
+      function! s:glue_project()
+        " set some key mappings
+      endfunction
+      call iced#hook#add('connected', {
+            \   'type': 'command',
+            \   'exec': 'call clojure#glue#dispatch("first_connected")'})
+      call clojure#glue#register('first_connected', function('s:glue_project'))
 
 
 - `gf` helper function: `clojure#glue#gf#includeexpr()`

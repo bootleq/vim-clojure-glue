@@ -26,12 +26,27 @@ function! ClojureDetect() abort "{{{
     return v:true
   endif
 
-  let path = findfile('shadow-cljs.edn', '.;')
+  let type = ''
+  let detects = {
+        \   'clojure_cli': 'deps.edn',
+        \   'shadow_cljs': 'shadow-cljs.edn'
+        \ }
+
+  for [k, v] in items(detects)
+    let path = findfile(v, '.;')
+    if !empty(path)
+      let type = k
+      break
+    endif
+  endfor
+
   if empty(path)
+    let b:clojure_project_type = '' " EFFECT: set project type
     return v:false
   endif
 
   let b:clojure_project_dir = fnamemodify(path, ':p:h') " EFFECT: set project dir
+  let b:clojure_project_type = type                     " EFFECT: set project type
   return v:true
 endfunction "}}}
 

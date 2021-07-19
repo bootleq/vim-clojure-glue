@@ -11,11 +11,12 @@ function! clojure#glue#gf#includeexpr()
         \ ]
 
   for s:tx in transforms
-    " TODO: loop each 'suffixesadd'
-    let new_path = b:clojure_project_dir . '/src/' . s:tx(path) . '.cljs'
-    if filereadable(new_path)
-      return new_path
-    endif
+    for s:suffix in split(&suffixesadd, ',')
+      let new_path = b:clojure_project_dir . '/src/' . s:tx(path) . s:suffix
+      if filereadable(new_path)
+        return new_path
+      endif
+    endfo
   endfor
 
   return v:fname
