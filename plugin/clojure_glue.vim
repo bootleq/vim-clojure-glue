@@ -27,15 +27,16 @@ function! ClojureDetect() abort "{{{
   endif
 
   let type = ''
-  let detects = {
-        \   'clojure_cli': 'deps.edn',
-        \   'shadow_cljs': 'shadow-cljs.edn'
-        \ }
+  let detects = [
+        \   ['shadow_cljs', 'shadow-cljs.edn'],
+        \   ['clojure_cli', 'deps.edn']
+        \ ]
 
-  for [k, v] in items(detects)
-    let path = findfile(v, '.;')
+  for detect in detects
+    let [t, file] = detect
+    let path = findfile(file, '.;')
     if !empty(path)
-      let type = k
+      let type = t
       break
     endif
   endfor
