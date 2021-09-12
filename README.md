@@ -35,11 +35,13 @@ Unstable.
 
   - clojure cli project, by finding `deps.edn` file
   - shadow-cljs, by finding `shadow-cljs.edn` file
+  - when both found, currently it goes to an *uncertain* state, `b:clojure_project_dir` is not set.
 
-  This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project.
+  This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project, `'defer'` if both found.
 
   Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
 
+  Once tried detection, found info is saved to `clojure_glue_project_detected` as an List of Dictionary with `type` and `dir` keys.
 
 - Some wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
 
@@ -105,6 +107,15 @@ Unstable.
 
       " add below to 'project' event
       nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
+
+
+- Prompt for choosing one of detected project_types, `clojure#glue#select_project_type()`
+
+  When `ClojureDetect()` finds multiple candidates, `b:clojure_project_type` is set to `'defer'`.
+
+  You can call `clojure#glue#select_project_type()` to show an confirm dialog,
+  select a wanted type and that will be set to `b:clojure_project_dir` and `_type`.
+
 
 
 [vim-iced]: https://github.com/liquidz/vim-iced
