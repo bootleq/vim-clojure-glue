@@ -26,11 +26,18 @@ function! ClojureDetect() abort "{{{
     return v:true
   endif
 
+  let ext = expand('%:e')
   let founds = []
   let detects = {
         \   'clojure_cli': 'deps.edn',
         \   'shadow_cljs': 'shadow-cljs.edn'
         \ }
+
+  if ext == 'clj'
+    call filter(detects, 'v:key == "clojure_cli"')
+  elseif ext == 'cljs'
+    call filter(detects, 'v:key == "shadow_cljs"')
+  endif
 
   for [k, v] in items(detects)
     let path = findfile(v, '.;')

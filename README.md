@@ -35,7 +35,7 @@ Unstable.
 
   - clojure cli project, by finding `deps.edn` file
   - shadow-cljs, by finding `shadow-cljs.edn` file
-  - when both found, currently it goes to an *uncertain* state, `b:clojure_project_dir` is not set.
+  - when both found, pick the type matches current file extension (clj or cljs), if neither (i.e., cljc), currently it goes to an *uncertain* state, `b:clojure_project_dir` is not set.
 
   This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project, `'defer'` if both found.
 
