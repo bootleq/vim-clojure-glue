@@ -26,6 +26,16 @@ function! ClojureDetect() abort "{{{
     return v:true
   endif
 
+  if exists('*' . get(g:, 'clojure_glue_detector'))
+    let custom_detected = call(g:clojure_glue_detector, [])
+    if type(custom_detected) == v:t_dict
+      let b:clojure_project_dir  = custom_detected.dir  " EFFECT: set project dir
+      let b:clojure_project_type = custom_detected.type " EFFECT: set project type
+      let b:clojure_glue_project_detected = custom_detected.founds  " EFFECT
+      return v:true
+    endif
+  endif
+
   let ext = expand('%:e')
   let founds = []
   let detects = {
