@@ -45,7 +45,7 @@ Unstable.
         let port = readfile(port_file)[0]
         let b:clojure_mixed_nrepl_port_file = port_file " your might want to record this, to be used for connection later
         let found = #{
-              \   dir: sub_dir,
+              \   dir: expand(root) . '/' . sub_dir,
               \   type: sub_dir == 'x-cljs' ? 'shadow_cljs' : 'clojure_cli',
               \   founds: []
               \ }
