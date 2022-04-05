@@ -137,6 +137,14 @@ Unstable.
 
       call clojure#glue#register('project', function('s:glue_project_detected'))
 
+  You can set `b:clojure_glue_extra_deps` to find files out of project
+  directory, for example:
+
+      let b:clojure_glue_extra_deps = {'my.foods': '../../somewhere/foods'}
+
+  then includeexpr will try `src` in `foods` path (relative to `b:clojure_project_dir`)
+  if file name under cursor matches `my.foods`.
+
   There is a helper function `clojure#glue#iced#gf()` to rebind `gf` to
   vim-iced's `IcedDefJump`, and fallback to normal `gf` if no tag to jump, example:
 

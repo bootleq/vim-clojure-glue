@@ -10,6 +10,22 @@ function! clojure#glue#gf#includeexpr()
         \   {s -> s->substitute('-', '_', 'g')},
         \ ]
 
+  for [key, value] in items(get(b:, 'clojure_glue_extra_deps', {}))
+    if substitute(key, '\.', '/', 'g') == path
+      let dir = b:clojure_project_dir . '/' . value . '/src/'
+      if isdirectory(dir)
+        for s:tx in transforms
+          for s:suffix in split(&suffixesadd, ',')
+            let new_path = dir . s:tx(path) . s:suffix
+            if filereadable(new_path)
+              return new_path
+            endif
+          endfo
+        endfor
+      end
+    endif
+  endfor
+
   for s:tx in transforms
     for s:suffix in split(&suffixesadd, ',')
       let new_path = b:clojure_project_dir . '/src/' . s:tx(path) . s:suffix
