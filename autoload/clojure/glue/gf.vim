@@ -6,7 +6,6 @@ function! clojure#glue#gf#includeexpr()
   endif
 
   let transforms = [
-        \   {s -> s},
         \   {s -> s->substitute('-', '_', 'g')},
         \ ]
 
