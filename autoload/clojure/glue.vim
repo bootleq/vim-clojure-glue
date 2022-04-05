@@ -45,3 +45,32 @@ function! clojure#glue#dispatch(event, ...)
     echohl WarningMsg | echoerr 'No event handler for ' . a:event | echohl None
   endif
 endfunction
+
+
+function! clojure#glue#select_project_type() "{{{
+  if !exists('b:clojure_glue_project_detected')
+    echohl WarningMsg | echoerr 'b:clojure_glue_project_detected not exists.' | echohl None
+  endif
+
+  let items = b:clojure_glue_project_detected
+
+  let index = 0
+  let candidates = []
+  let captions = []
+  for item in items
+    let caption = nr2char(char2nr('a') + index)
+    call add(candidates, printf(' %s) %s (%s)', caption, item.type, item.dir))
+    call add(captions, '&' . caption)
+    let index += 1
+  endfor
+
+  let choice = confirm("Select REPL type:\n" . join(candidates, "\n"), join(captions, "\n"), 0)
+  if choice
+    let found = items[choice - 1]
+    let b:clojure_project_dir = found.dir
+    let b:clojure_project_type = found.type
+    return v:true
+  endif
+
+  return v:null
+endfunction "}}}

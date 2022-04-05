@@ -27,6 +27,37 @@ Unstable.
       call clojure#glue#register('filetype', function('s:glue_filetype'))
 
 
+- Custom project detector, assume we have `~/parent/x-clj`, `~/parent/x-cljs`
+  with **single** `~/parent/.shadow-cljs/nrepl.port` to serve a clj + cljs REPLs.
+
+  ```vim
+  function! s:glue_custom_detector() abort
+    let dir = fnamemodify(expand('%'), ':~')
+    let found = v:null
+
+    if dir =~ '.\+/parent'
+      let root    = finddir('parent', ';') ->fnamemodify(':~')
+      let sub_dir = dir ->strpart(len(root)) ->split('/') ->{x -> len(x) ? x[0] : ''}()
+
+      " root port: mixed clj + cljs repl
+      let port_file = expand(root) . '/.shadow-cljs/nrepl.port'
+      if filereadable(port_file)
+        let port = readfile(port_file)[0]
+        let b:clojure_mixed_nrepl_port_file = port_file " your might want to record this, to be used for connection later
+        let found = #{
+              \   dir: expand(root) . '/' . sub_dir,
+              \   type: sub_dir == 'x-cljs' ? 'shadow_cljs' : 'clojure_cli',
+              \   founds: []
+              \ }
+      endif
+
+      return found
+    endif
+  endfunction
+  let g:clojure_glue_detector = matchstr(expand('<sfile>'), '<SNR>\d\+_') . 'glue_custom_detector'
+  ```
+
+
 ## Features
 
 - `ClojureDetect()`, detect project root and set as variable `b:clojure_project_dir`
@@ -35,11 +66,17 @@ Unstable.
 
   - clojure cli project, by finding `deps.edn` file
   - shadow-cljs, by finding `shadow-cljs.edn` file
+  - when both found, pick the type matches current file extension (clj or cljs), if neither (i.e., cljc), currently it goes to an *uncertain* state, `b:clojure_project_dir` is not set.
+  - If above behavior still not suitable, set `g:clojure_glue_detector` to do customized detection (detailed later).
 
-  This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project.
+  This also set `b:clojure_project_type` to `'clojure_cli'`, `'shadow_cljs'`, or `''` if detected no project, `'defer'` if both found.
 
   Currently this is done without opt-out option, see `after/ftplugin/clojure/clojure_glue.vim`.
 
+  Once tried detection, found info is saved to `clojure_glue_project_detected` as an List of Dictionary with `type` and `dir` keys.
+
+  `g:clojure_glue_detector`: can be set to a function returns Dictionary with `dir` `type` and `founds` keys, each will be taken to
+  `b:clojure_project_dir`, `b:clojure_project_type` and `b:clojure_glue_project_detected`, or returns `null` to fallback to default detector.
 
 - Some wrapper functions wait-to-be-defined, an layer to make script work with different plugins (e.g., [vim-iced][] or [conjure][]).
 
@@ -105,6 +142,15 @@ Unstable.
 
       " add below to 'project' event
       nmap <buffer> <silent> gf :call clojure#glue#iced#gf()<CR>
+
+
+- Prompt for choosing one of detected project_types, `clojure#glue#select_project_type()`
+
+  When `ClojureDetect()` finds multiple candidates, `b:clojure_project_type` is set to `'defer'`.
+
+  You can call `clojure#glue#select_project_type()` to show an confirm dialog,
+  select a wanted type and that will be set to `b:clojure_project_dir` and `_type`.
+
 
 
 [vim-iced]: https://github.com/liquidz/vim-iced
